@@ -12,11 +12,11 @@ namespace Trading.API.Controllers;
 [Authorize]
 public class PurchaseController : ControllerBase
 {
-    private readonly IPublishEndpoint publishEndpoint;
+    private readonly IPublishEndpoint _publishEndpoint;
 
     public PurchaseController(IPublishEndpoint publishEndpoint)
     {
-        this.publishEndpoint = publishEndpoint;
+        _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
     }
 
     [HttpPost]
@@ -27,7 +27,7 @@ public class PurchaseController : ControllerBase
 
         var message = new PurchaseRequested(Guid.Parse(userId!), purchase.ItemId!.Value, purchase.Quantity, correlationId);
 
-        await publishEndpoint.Publish(message);
+        await _publishEndpoint.Publish(message);
 
         return Accepted();
     }
