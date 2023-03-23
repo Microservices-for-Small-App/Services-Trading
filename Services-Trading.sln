@@ -18,16 +18,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trading.API", "src\Trading.API\Trading.API.csproj", "{0610264E-05EE-4609-997B-23F421748DB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0610264E-05EE-4609-997B-23F421748DB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0610264E-05EE-4609-997B-23F421748DB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0610264E-05EE-4609-997B-23F421748DB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0610264E-05EE-4609-997B-23F421748DB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{01B09B4C-0B48-4B43-84B7-E2DE3001F592} = {5718B766-03D4-4A76-82B6-225F08E47000}
+		{0610264E-05EE-4609-997B-23F421748DB1} = {F9C9C9B4-FEB9-4C50-A7BC-C7C83A1E37BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {288B33F9-6494-441B-8292-2080115BB7FD}
