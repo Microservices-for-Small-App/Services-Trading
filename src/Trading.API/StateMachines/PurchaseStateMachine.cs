@@ -18,7 +18,9 @@ public class PurchaseStateMachine : MassTransitStateMachine<PurchaseState>
     public PurchaseStateMachine()
     {
         InstanceState(state => state.CurrentState);
+
         ConfigureEvents();
+
         ConfigureInitialState();
     }
 
