@@ -3,8 +3,8 @@
   "iisSettings": {
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:48992",
-      "sslPort": 44383
+      "applicationUrl": "http://localhost:3454",
+      "sslPort": 44377
     },
     "windowsAuthentication": false
   },
@@ -18,7 +18,7 @@
       "launchUrl": "swagger"
     },
     "Trading.API": {
-      "applicationUrl": "https://localhost:7181;http://localhost:5165",
+      "applicationUrl": "https://localhost:7280;http://localhost:5179",
       "commandName": "Project",
       "dotnetRunMessages": true,
       "environmentVariables": {
