@@ -36,21 +36,21 @@ app.Run();
 
 void AddMassTransit(IServiceCollection services)
 {
-    services.AddMassTransit(configure =>
+    _ = services.AddMassTransit(configure =>
     {
         configure.UsingRabbitMq();
-        configure.AddSagaStateMachine<PurchaseStateMachine, PurchaseState>()
+
+        _ = configure.AddSagaStateMachine<PurchaseStateMachine, PurchaseState>()
             .MongoDbRepository(r =>
             {
-                var serviceSettings = builder.Configuration.GetSection(nameof(ServiceSettings))
-                                                   .Get<ServiceSettings>();
-                var mongoSettings = builder.Configuration.GetSection(nameof(MongoDbSettings))
-                                                   .Get<MongoDbSettings>();
+                var serviceSettings = builder.Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
+
+                var mongoSettings = builder.Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
 
                 r.Connection = mongoSettings!.ConnectionString;
                 r.DatabaseName = serviceSettings!.ServiceName;
             });
     });
 
-    services.AddMassTransitHostedService();
+    _ = services.AddMassTransitHostedService();
 }
