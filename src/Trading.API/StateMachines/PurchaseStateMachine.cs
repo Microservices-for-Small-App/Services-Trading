@@ -15,6 +15,8 @@ public class PurchaseStateMachine : MassTransitStateMachine<PurchaseState>
 
     public Event<PurchaseRequested>? PurchaseRequested { get; }
 
+    public Event<GetPurchaseState> GetPurchaseState { get; }
+
     public PurchaseStateMachine()
     {
         InstanceState(state => state.CurrentState);
