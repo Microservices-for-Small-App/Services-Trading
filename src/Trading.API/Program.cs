@@ -3,13 +3,16 @@ using CommonLibrary.MassTransit;
 using CommonLibrary.MongoDB.Extensions;
 using CommonLibrary.Settings;
 using MassTransit;
+using System.Reflection;
 using System.Text.Json.Serialization;
+using Trading.API.Entities;
 using Trading.API.StateMachines;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddMongo()
+                .AddMongoRepository<CatalogItem>("catalogitems")
                 .AddJwtBearerAuthentication();
 
 AddMassTransit(builder.Services);
@@ -45,6 +48,8 @@ void AddMassTransit(IServiceCollection services)
     _ = services.AddMassTransit(configure =>
     {
         configure.UseRabbitMqService();
+
+        configure.AddConsumers(Assembly.GetEntryAssembly());
 
         _ = configure.AddSagaStateMachine<PurchaseStateMachine, PurchaseState>()
             .MongoDbRepository(r =>
