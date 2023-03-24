@@ -59,4 +59,6 @@ void AddMassTransit(IServiceCollection services)
     });
 
     _ = services.AddMassTransitHostedService();
+
+    _ = services.AddGenericRequestClient();
 }
