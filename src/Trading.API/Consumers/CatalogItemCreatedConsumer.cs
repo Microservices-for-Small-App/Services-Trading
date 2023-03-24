@@ -7,20 +7,20 @@ namespace Trading.API.Consumers;
 
 public class CatalogItemCreatedConsumer : IConsumer<CatalogItemCreated>
 {
-    private readonly IRepository<CatalogItem> repository;
+    private readonly IRepository<CatalogItem> _repository;
 
     public CatalogItemCreatedConsumer(IRepository<CatalogItem> repository)
     {
-        this.repository = repository;
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
     public async Task Consume(ConsumeContext<CatalogItemCreated> context)
     {
         var message = context.Message;
 
-        var item = await repository.GetAsync(message.ItemId);
+        var item = await _repository.GetAsync(message.ItemId);
 
-        if (item != null)
+        if (item is not null)
         {
             return;
         }
@@ -33,6 +33,6 @@ public class CatalogItemCreatedConsumer : IConsumer<CatalogItemCreated>
             Price = message.Price
         };
 
-        await repository.CreateAsync(item);
+        await _repository.CreateAsync(item);
     }
 }
