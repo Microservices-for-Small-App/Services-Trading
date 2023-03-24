@@ -7,7 +7,7 @@ public class PurchaseState : SagaStateMachineInstance, ISagaVersion
 {
     public Guid CorrelationId { get; set; }
 
-    public string CurrentState { get; set; } = string.Empty;
+    public string? CurrentState { get; set; }
 
     public Guid UserId { get; set; }
 
@@ -21,7 +21,7 @@ public class PurchaseState : SagaStateMachineInstance, ISagaVersion
 
     public DateTimeOffset LastUpdated { get; set; }
 
-    public string ErrorMessage { get; set; } = string.Empty;
+    public string? ErrorMessage { get; set; }
 
     public int Version { get; set; }
 }
