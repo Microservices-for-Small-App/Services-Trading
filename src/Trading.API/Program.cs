@@ -1,4 +1,5 @@
 using CommonLibrary.Identity;
+using CommonLibrary.MassTransit;
 using CommonLibrary.MongoDB.Extensions;
 using CommonLibrary.Settings;
 using MassTransit;
@@ -38,7 +39,7 @@ void AddMassTransit(IServiceCollection services)
 {
     _ = services.AddMassTransit(configure =>
     {
-        configure.UsingRabbitMq();
+        configure.UseRabbitMqService();
 
         _ = configure.AddSagaStateMachine<PurchaseStateMachine, PurchaseState>()
             .MongoDbRepository(r =>
