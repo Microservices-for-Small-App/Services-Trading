@@ -1,6 +1,16 @@
+using CommonLibrary.Identity;
+using CommonLibrary.MongoDB.Extensions;
+using CommonLibrary.Settings;
+using MassTransit;
+using Trading.API.StateMachines;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddMongo()
+                .AddJwtBearerAuthentication();
+
+AddMassTransit(builder.Services);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -23,3 +33,24 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+void AddMassTransit(IServiceCollection services)
+{
+    services.AddMassTransit(configure =>
+    {
+        configure.UsingRabbitMq();
+        configure.AddSagaStateMachine<PurchaseStateMachine, PurchaseState>()
+            .MongoDbRepository(r =>
+            {
+                var serviceSettings = builder.Configuration.GetSection(nameof(ServiceSettings))
+                                                   .Get<ServiceSettings>();
+                var mongoSettings = builder.Configuration.GetSection(nameof(MongoDbSettings))
+                                                   .Get<MongoDbSettings>();
+
+                r.Connection = mongoSettings!.ConnectionString;
+                r.DatabaseName = serviceSettings!.ServiceName;
+            });
+    });
+
+    services.AddMassTransitHostedService();
+}
