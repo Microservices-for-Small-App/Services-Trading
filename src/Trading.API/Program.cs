@@ -2,15 +2,23 @@ using CommonLibrary.Identity;
 using CommonLibrary.MassTransit;
 using CommonLibrary.MongoDB.Extensions;
 using CommonLibrary.Settings;
+using GreenPipes;
 using MassTransit;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Trading.API.Entities;
+using Trading.API.Exceptions;
 using Trading.API.StateMachines;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+_ = builder.Services.AddSingleton(builder.Configuration?.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>()!);
+
+_ = builder.Services.AddSingleton(builder.Configuration?.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>()!);
+
+_ = builder.Services.AddSingleton(builder.Configuration?.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>()!);
+
 builder.Services.AddMongo()
                 .AddMongoRepository<CatalogItem>("catalogitems")
                 .AddJwtBearerAuthentication();
@@ -47,14 +55,19 @@ void AddMassTransit(IServiceCollection services)
 {
     _ = services.AddMassTransit(configure =>
     {
-        configure.UseRabbitMqService();
+        configure.UseRabbitMqService(retryConfigurator =>
+        {
+            retryConfigurator.Interval(3, TimeSpan.FromSeconds(5));
+
+            retryConfigurator.Ignore(typeof(UnknownItemException));
+        });
 
         configure.AddConsumers(Assembly.GetEntryAssembly());
 
         _ = configure.AddSagaStateMachine<PurchaseStateMachine, PurchaseState>()
             .MongoDbRepository(r =>
             {
-                var serviceSettings = builder.Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
+                var serviceSettings = builder.Configuration!.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
 
                 var mongoSettings = builder.Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
 
