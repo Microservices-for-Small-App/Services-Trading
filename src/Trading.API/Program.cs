@@ -3,11 +3,13 @@ using CommonLibrary.MassTransit;
 using CommonLibrary.MongoDB.Extensions;
 using CommonLibrary.Settings;
 using GreenPipes;
+using Inventory.Contracts;
 using MassTransit;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Trading.API.Entities;
 using Trading.API.Exceptions;
+using Trading.API.Settings;
 using Trading.API.StateMachines;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -75,6 +77,10 @@ void AddMassTransit(IServiceCollection services)
                 r.DatabaseName = serviceSettings!.ServiceName;
             });
     });
+
+    var queueSettings = builder.Configuration!.GetSection(nameof(QueueSettings)).Get<QueueSettings>();
+
+    EndpointConvention.Map<GrantItems>(new Uri(queueSettings?.GrantItemsQueueAddress!));
 
     _ = services.AddMassTransitHostedService();
 
