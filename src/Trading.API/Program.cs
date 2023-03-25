@@ -13,6 +13,12 @@ using Trading.API.StateMachines;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+_ = builder.Services.AddSingleton(builder.Configuration?.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>()!);
+
+_ = builder.Services.AddSingleton(builder.Configuration?.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>()!);
+
+_ = builder.Services.AddSingleton(builder.Configuration?.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>()!);
+
 builder.Services.AddMongo()
                 .AddMongoRepository<CatalogItem>("catalogitems")
                 .AddJwtBearerAuthentication();
@@ -52,6 +58,7 @@ void AddMassTransit(IServiceCollection services)
         configure.UseRabbitMqService(retryConfigurator =>
         {
             retryConfigurator.Interval(3, TimeSpan.FromSeconds(5));
+
             retryConfigurator.Ignore(typeof(UnknownItemException));
         });
 
@@ -60,7 +67,7 @@ void AddMassTransit(IServiceCollection services)
         _ = configure.AddSagaStateMachine<PurchaseStateMachine, PurchaseState>()
             .MongoDbRepository(r =>
             {
-                var serviceSettings = builder.Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
+                var serviceSettings = builder.Configuration!.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
 
                 var mongoSettings = builder.Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
 
