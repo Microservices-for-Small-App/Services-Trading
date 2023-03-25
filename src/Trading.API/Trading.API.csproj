@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Catalog.Contracts" Version="1.0.3" />
+    <PackageReference Include="Inventory.Contracts" Version="1.0.2" />
     <PackageReference Include="MassTransit" Version="7.3.1" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
     <PackageReference Include="MassTransit.MongoDB" Version="7.3.1" />
