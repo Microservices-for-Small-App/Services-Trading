@@ -1,4 +1,5 @@
 ﻿using Automatonymous;
+using Inventory.Contracts;
 using Trading.API.Activities;
 using Trading.API.Contracts;
 
@@ -49,6 +50,11 @@ public class PurchaseStateMachine : MassTransitStateMachine<PurchaseState>
                     context.Instance.LastUpdated = context.Instance.Received;
                 })
                 .Activity(x => x.OfType<CalculatePurchaseTotalActivity>())
+                .Send(context => new GrantItems(
+                        context.Instance.UserId,
+                        context.Instance.ItemId,
+                        context.Instance.Quantity,
+                        context.Instance.CorrelationId))
                 .TransitionTo(Accepted)
                 .Catch<Exception>(ex => ex.
                         Then(context =>
