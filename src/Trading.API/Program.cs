@@ -2,10 +2,12 @@ using CommonLibrary.Identity;
 using CommonLibrary.MassTransit;
 using CommonLibrary.MongoDB.Extensions;
 using CommonLibrary.Settings;
+using GreenPipes;
 using MassTransit;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Trading.API.Entities;
+using Trading.API.Exceptions;
 using Trading.API.StateMachines;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,7 +49,11 @@ void AddMassTransit(IServiceCollection services)
 {
     _ = services.AddMassTransit(configure =>
     {
-        configure.UseRabbitMqService();
+        configure.UseRabbitMqService(retryConfigurator =>
+        {
+            retryConfigurator.Interval(3, TimeSpan.FromSeconds(5));
+            retryConfigurator.Ignore(typeof(UnknownItemException));
+        });
 
         configure.AddConsumers(Assembly.GetEntryAssembly());
 
