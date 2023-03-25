@@ -19,6 +19,8 @@ public class PurchaseStateMachine : MassTransitStateMachine<PurchaseState>
 
     public Event<GetPurchaseState>? GetPurchaseState { get; }
 
+    public Event<InventoryItemsGranted>? InventoryItemsGranted { get; }
+
     public PurchaseStateMachine()
     {
         InstanceState(state => state.CurrentState);
@@ -28,6 +30,8 @@ public class PurchaseStateMachine : MassTransitStateMachine<PurchaseState>
         ConfigureInitialState();
 
         ConfigureAny();
+
+        ConfigureAccepted();
     }
 
     private void ConfigureEvents()
@@ -35,6 +39,8 @@ public class PurchaseStateMachine : MassTransitStateMachine<PurchaseState>
         Event(() => PurchaseRequested);
 
         Event(() => GetPurchaseState);
+
+        Event(() => InventoryItemsGranted);
     }
 
     private void ConfigureInitialState()
@@ -64,6 +70,17 @@ public class PurchaseStateMachine : MassTransitStateMachine<PurchaseState>
                         })
                         .TransitionTo(Faulted))
         );
+    }
+
+    private void ConfigureAccepted()
+    {
+        During(Accepted,
+            When(InventoryItemsGranted)
+                .Then(context =>
+                {
+                    context.Instance.LastUpdated = DateTimeOffset.UtcNow;
+                })
+                .TransitionTo(ItemsGranted));
     }
 
     private void ConfigureAny()
