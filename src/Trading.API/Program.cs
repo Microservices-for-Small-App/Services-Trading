@@ -3,6 +3,7 @@ using CommonLibrary.MassTransit;
 using CommonLibrary.MongoDB.Extensions;
 using CommonLibrary.Settings;
 using GreenPipes;
+using Identity.Contracts;
 using Inventory.Contracts;
 using MassTransit;
 using System.Reflection;
@@ -84,6 +85,8 @@ void AddMassTransit(IServiceCollection services)
     var queueSettings = builder.Configuration!.GetSection(nameof(QueueSettings)).Get<QueueSettings>();
 
     EndpointConvention.Map<GrantItems>(new Uri(queueSettings?.GrantItemsQueueAddress!));
+
+    EndpointConvention.Map<DebitGil>(new Uri(queueSettings?.DebitGilQueueAddress!));
 
     _ = services.AddMassTransitHostedService();
 
