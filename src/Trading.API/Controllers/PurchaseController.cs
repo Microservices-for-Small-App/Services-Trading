@@ -46,6 +46,8 @@ public class PurchaseController : ControllerBase
 
         await _publishEndpoint.Publish(message);
 
+        await Task.Delay(TimeSpan.FromSeconds(5));
+
         return AcceptedAtAction(nameof(GetStatusAsync), new { correlationId }, new { correlationId });
     }
 
