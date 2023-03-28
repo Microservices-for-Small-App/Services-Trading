@@ -23,7 +23,7 @@ public class PurchaseController : ControllerBase
         _purchaseClient = purchaseClient ?? throw new ArgumentNullException(nameof(purchaseClient));
     }
 
-    [HttpGet("status/{correlationId}")]
+    [HttpGet("status/{idempotencyId}")]
     public async Task<ActionResult<PurchaseDto>> GetStatusAsync(Guid idempotencyId)
     {
         var response = await _purchaseClient.GetResponse<PurchaseState>(new GetPurchaseState(idempotencyId));
@@ -46,9 +46,7 @@ public class PurchaseController : ControllerBase
 
         await _publishEndpoint.Publish(message);
 
-        await Task.Delay(TimeSpan.FromSeconds(5));
-
-        return AcceptedAtAction(nameof(GetStatusAsync), new { correlationId }, new { correlationId });
+        return AcceptedAtAction(nameof(GetStatusAsync), new { purchase.IdempotencyId }, new { purchase.IdempotencyId });
     }
 
 }
