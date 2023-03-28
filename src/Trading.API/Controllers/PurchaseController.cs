@@ -24,9 +24,9 @@ public class PurchaseController : ControllerBase
     }
 
     [HttpGet("status/{correlationId}")]
-    public async Task<ActionResult<PurchaseDto>> GetStatusAsync(Guid correlationId)
+    public async Task<ActionResult<PurchaseDto>> GetStatusAsync(Guid idempotencyId)
     {
-        var response = await _purchaseClient.GetResponse<PurchaseState>(new GetPurchaseState(correlationId));
+        var response = await _purchaseClient.GetResponse<PurchaseState>(new GetPurchaseState(idempotencyId));
 
         var purchaseState = response.Message;
 
@@ -40,9 +40,9 @@ public class PurchaseController : ControllerBase
     public async Task<IActionResult> PostAsync(SubmitPurchaseDto purchase)
     {
         var userId = User.FindFirstValue("sub");
-        var correlationId = Guid.NewGuid();
+        var correlationId = purchase.IdempotencyId;
 
-        var message = new PurchaseRequested(Guid.Parse(userId!), purchase.ItemId!.Value, purchase.Quantity, correlationId);
+        var message = new PurchaseRequested(Guid.Parse(userId!), purchase.ItemId!.Value, purchase.Quantity, correlationId!.Value);
 
         await _publishEndpoint.Publish(message);
 
