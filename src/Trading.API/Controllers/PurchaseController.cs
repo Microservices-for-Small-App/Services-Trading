@@ -23,10 +23,10 @@ public class PurchaseController : ControllerBase
         _purchaseClient = purchaseClient ?? throw new ArgumentNullException(nameof(purchaseClient));
     }
 
-    [HttpGet("status/{correlationId}")]
-    public async Task<ActionResult<PurchaseDto>> GetStatusAsync(Guid correlationId)
+    [HttpGet("status/{idempotencyId}")]
+    public async Task<ActionResult<PurchaseDto>> GetStatusAsync(Guid idempotencyId)
     {
-        var response = await _purchaseClient.GetResponse<PurchaseState>(new GetPurchaseState(correlationId));
+        var response = await _purchaseClient.GetResponse<PurchaseState>(new GetPurchaseState(idempotencyId));
 
         var purchaseState = response.Message;
 
@@ -40,13 +40,13 @@ public class PurchaseController : ControllerBase
     public async Task<IActionResult> PostAsync(SubmitPurchaseDto purchase)
     {
         var userId = User.FindFirstValue("sub");
-        var correlationId = Guid.NewGuid();
+        var correlationId = purchase.IdempotencyId;
 
-        var message = new PurchaseRequested(Guid.Parse(userId!), purchase.ItemId!.Value, purchase.Quantity, correlationId);
+        var message = new PurchaseRequested(Guid.Parse(userId!), purchase.ItemId!.Value, purchase.Quantity, correlationId!.Value);
 
         await _publishEndpoint.Publish(message);
 
-        return AcceptedAtAction(nameof(GetStatusAsync), new { correlationId }, new { correlationId });
+        return AcceptedAtAction(nameof(GetStatusAsync), new { purchase.IdempotencyId }, new { purchase.IdempotencyId });
     }
 
 }
