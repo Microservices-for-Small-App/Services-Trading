@@ -7,20 +7,20 @@ namespace Trading.API.Consumers;
 
 public class UserUpdatedConsumer : IConsumer<UserUpdated>
 {
-    private readonly IRepository<ApplicationUser> repository;
+    private readonly IRepository<ApplicationUser> _repository;
 
     public UserUpdatedConsumer(IRepository<ApplicationUser> repository)
     {
-        this.repository = repository;
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
     public async Task Consume(ConsumeContext<UserUpdated> context)
     {
         var message = context.Message;
 
-        var user = await repository.GetAsync(message.UserId);
+        var user = await _repository.GetAsync(message.UserId);
 
-        if (user == null)
+        if (user is null)
         {
             user = new ApplicationUser
             {
@@ -28,13 +28,13 @@ public class UserUpdatedConsumer : IConsumer<UserUpdated>
                 Gil = message.NewTotalGil
             };
 
-            await repository.CreateAsync(user);
+            await _repository.CreateAsync(user);
         }
         else
         {
             user.Gil = message.NewTotalGil;
 
-            await repository.UpdateAsync(user);
+            await _repository.UpdateAsync(user);
         }
     }
 }

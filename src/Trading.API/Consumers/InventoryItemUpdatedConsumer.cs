@@ -7,21 +7,21 @@ namespace Trading.API.Consumers;
 
 public class InventoryItemUpdatedConsumer : IConsumer<InventoryItemUpdated>
 {
-    private readonly IRepository<InventoryItem> repository;
+    private readonly IRepository<InventoryItem> _repository;
 
     public InventoryItemUpdatedConsumer(IRepository<InventoryItem> repository)
     {
-        this.repository = repository;
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
     public async Task Consume(ConsumeContext<InventoryItemUpdated> context)
     {
         var message = context.Message;
 
-        var inventoryItem = await repository.GetAsync(
+        var inventoryItem = await _repository.GetAsync(
             item => item.UserId == message.UserId && item.CatalogItemId == message.CatalogItemId);
 
-        if (inventoryItem == null)
+        if (inventoryItem is null)
         {
             inventoryItem = new InventoryItem
             {
@@ -30,12 +30,12 @@ public class InventoryItemUpdatedConsumer : IConsumer<InventoryItemUpdated>
                 Quantity = message.NewTotalQuantity
             };
 
-            await repository.CreateAsync(inventoryItem);
+            await _repository.CreateAsync(inventoryItem);
         }
         else
         {
             inventoryItem.Quantity = message.NewTotalQuantity;
-            await repository.UpdateAsync(inventoryItem);
+            await _repository.UpdateAsync(inventoryItem);
         }
     }
 }
