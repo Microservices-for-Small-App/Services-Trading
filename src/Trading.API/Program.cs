@@ -24,6 +24,8 @@ _ = builder.Services.AddSingleton(builder.Configuration?.GetSection(nameof(Rabbi
 
 builder.Services.AddMongo()
                 .AddMongoRepository<CatalogItem>("catalogitems")
+                .AddMongoRepository<InventoryItem>("inventoryitems")
+                .AddMongoRepository<ApplicationUser>("users")
                 .AddJwtBearerAuthentication();
 
 AddMassTransit(builder.Services);
