@@ -6,11 +6,13 @@ using GreenPipes;
 using Identity.Contracts;
 using Inventory.Contracts;
 using MassTransit;
+using Microsoft.AspNetCore.SignalR;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Trading.API.Entities;
 using Trading.API.Exceptions;
 using Trading.API.Settings;
+using Trading.API.SignalRHubs;
 using Trading.API.StateMachines;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +43,10 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddSingleton<IUserIdProvider, UserIdProvider>()
+                    .AddSingleton<MessageHub>()
+                    .AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -51,9 +57,10 @@ if (app.Environment.IsDevelopment())
 
     app.UseCors(options =>
     {
-        options.WithOrigins(builder.Configuration![AllowedOriginSetting]!)
+        _ = options.WithOrigins(builder.Configuration![AllowedOriginSetting]!)
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 }
 
@@ -62,6 +69,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<MessageHub>("/messageHub");
 
 app.Run();
 
