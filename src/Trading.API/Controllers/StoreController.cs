@@ -1,7 +1,8 @@
 ﻿using CommonLibrary.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Trading.API.Dtos;
 using Trading.API.Entities;
 
 namespace Trading.API.Controllers;
@@ -24,5 +25,25 @@ public class StoreController : ControllerBase
         _inventoryRepository = inventoryRepository ?? throw new ArgumentNullException(nameof(inventoryRepository));
     }
 
+    [HttpGet]
+    public async Task<ActionResult<StoreDto>> GetAsync()
+    {
+        string userId = User.FindFirstValue("sub")!;
+
+        var catalogItems = await _catalogRepository.GetAllAsync();
+
+        var inventoryItems = await _inventoryRepository.GetAllAsync(item => item.UserId == Guid.Parse(userId));
+
+        var user = await _usersRepository.GetAsync(Guid.Parse(userId));
+
+        var storeDto = new StoreDto(
+            catalogItems.Select(catalogItem =>
+                new StoreItemDto(catalogItem.Id, catalogItem.Name!, catalogItem.Description!, catalogItem.Price,
+                    inventoryItems.FirstOrDefault(inventoryItem => inventoryItem.CatalogItemId == catalogItem.Id)?.Quantity ?? 0)),
+            user?.Gil ?? 0
+        );
+
+        return Ok(storeDto);
+    }
 
 }
