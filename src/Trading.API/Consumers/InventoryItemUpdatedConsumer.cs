@@ -35,6 +35,7 @@ public class InventoryItemUpdatedConsumer : IConsumer<InventoryItemUpdated>
         else
         {
             inventoryItem.Quantity = message.NewTotalQuantity;
+
             await _repository.UpdateAsync(inventoryItem);
         }
     }
