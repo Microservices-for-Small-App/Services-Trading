@@ -15,6 +15,8 @@ using Trading.API.StateMachines;
 
 var builder = WebApplication.CreateBuilder(args);
 
+const string AllowedOriginSetting = "AllowedOrigin";
+
 // Add services to the container.
 _ = builder.Services.AddSingleton(builder.Configuration?.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>()!);
 
@@ -46,6 +48,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseCors(options =>
+    {
+        options.WithOrigins(builder.Configuration![AllowedOriginSetting]!)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
 }
 
 app.UseHttpsRedirection();
