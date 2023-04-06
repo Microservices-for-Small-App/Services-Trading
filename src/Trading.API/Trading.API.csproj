@@ -7,16 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Catalog.Contracts" Version="1.0.3" />
-    <PackageReference Include="Identity.Contracts" Version="1.0.5" />
-    <PackageReference Include="Inventory.Contracts" Version="1.0.6" />
+    <PackageReference Include="Catalog.Contracts" Version="1.0.5" />
+    <PackageReference Include="Identity.Contracts" Version="1.0.8" />
+    <PackageReference Include="Inventory.Contracts" Version="1.0.8" />
     <PackageReference Include="MassTransit" Version="7.3.1" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
     <PackageReference Include="MassTransit.MongoDB" Version="7.3.1" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="CommonLibrary" Version="1.0.12" />
+    <PackageReference Include="CommonLibrary" Version="1.0.18" />
   </ItemGroup>
 
 </Project>
