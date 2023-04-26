@@ -9,12 +9,12 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["src/Trading.API/Trading.API.csproj", "src/Trading.API/"]
 RUN dotnet restore "src/Trading.API/Trading.API.csproj"
-COPY . .
+COPY ./src ./src
 WORKDIR "/src/src/Trading.API"
-RUN dotnet build "Trading.API.csproj" -c Release -o /app/build
+RUN dotnet build "Trading.API.csproj" -c Release --no-restore -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Trading.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Trading.API.csproj" -c Release --no-restore -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
