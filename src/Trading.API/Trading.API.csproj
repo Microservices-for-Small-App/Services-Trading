@@ -4,19 +4,24 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>a6c0c686-4da6-4aa2-87ca-5c0bdf4ef8cf</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+    <DockerfileRunArguments>--network dakar_default</DockerfileRunArguments>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Catalog.Contracts" Version="1.0.5" />
-    <PackageReference Include="Identity.Contracts" Version="1.0.8" />
-    <PackageReference Include="Inventory.Contracts" Version="1.0.8" />
+    <PackageReference Include="Catalog.Contracts" Version="1.0.7" />
+    <PackageReference Include="Identity.Contracts" Version="1.0.9" />
+    <PackageReference Include="Inventory.Contracts" Version="1.0.9" />
     <PackageReference Include="MassTransit" Version="7.3.1" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
     <PackageReference Include="MassTransit.MongoDB" Version="7.3.1" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.1" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="CommonLibrary" Version="1.0.18" />
+    <PackageReference Include="CommonLibrary" Version="1.0.24" />
   </ItemGroup>
 
 </Project>

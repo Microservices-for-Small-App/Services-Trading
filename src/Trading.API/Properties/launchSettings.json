@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "anonymousAuthentication": true,
@@ -9,6 +9,19 @@
     "windowsAuthentication": false
   },
   "profiles": {
+    "Docker": {
+      "commandName": "Docker",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MongoDbSettings__Host": "mongo",
+        "RabbitMQSettings__Host": "rabbitmq",
+        "ServiceSettings__Authority": "https://localhost:5003"
+      },
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "publishAllPorts": true,
+      "useSSL": true
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "environmentVariables": {

@@ -72,6 +72,8 @@ app.MapControllers();
 
 app.MapHub<MessageHub>("/messageHub");
 
+app.MapGet("/", () => "Please use /swagger to see the Trading.API documentation.");
+
 app.Run();
 
 void AddMassTransit(IServiceCollection services)
