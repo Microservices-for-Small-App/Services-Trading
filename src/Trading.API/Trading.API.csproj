@@ -14,10 +14,10 @@
     <PackageReference Include="Catalog.Contracts" Version="1.0.7" />
     <PackageReference Include="Identity.Contracts" Version="1.0.10" />
     <PackageReference Include="Inventory.Contracts" Version="1.0.9" />
-    <PackageReference Include="MassTransit" Version="7.3.1" />
-    <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
+    <!--<PackageReference Include="MassTransit" Version="7.3.1" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />-->
     <PackageReference Include="MassTransit.MongoDB" Version="7.3.1" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.1" />
+    <!--<PackageReference Include="MassTransit.RabbitMQ" Version="7.3.1" />-->
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
