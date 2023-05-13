@@ -80,7 +80,7 @@ void AddMassTransit(IServiceCollection services)
 {
     _ = services.AddMassTransit(configure =>
     {
-        configure.UseRabbitMqService(retryConfigurator =>
+        configure.UseMessageBroker(builder.Configuration!, retryConfigurator =>
         {
             retryConfigurator.Interval(3, TimeSpan.FromSeconds(5));
 
