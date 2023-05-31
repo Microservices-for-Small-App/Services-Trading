@@ -1,3 +1,4 @@
+using CommonLibrary.HealthChecks;
 using CommonLibrary.Identity;
 using CommonLibrary.MassTransit;
 using CommonLibrary.MongoDB.Extensions;
@@ -47,6 +48,8 @@ builder.Services.AddSingleton<IUserIdProvider, UserIdProvider>()
                     .AddSingleton<MessageHub>()
                     .AddSignalR();
 
+builder.Services.AddHealthChecks().AddMongoDb();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -73,6 +76,8 @@ app.MapControllers();
 app.MapHub<MessageHub>("/messageHub");
 
 app.MapGet("/", () => "Please use /swagger to see the Trading.API documentation.");
+
+app.MapPlayEconomyHealthChecks();
 
 app.Run();
 
